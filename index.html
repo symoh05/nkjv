@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NKJV Bible Reader</title>
+    <style>
+        :root {
+            --parchment: #fff9e6;
+            --parchment-dark: #e8d9b5;
+            --ink: #3a2c0e;
+            --accent: #8b5a2b;
+            --border: #d4b483;
+            --highlight-yellow: rgba(255, 255, 0, 0.3);
+            --highlight-green: rgba(0, 255, 0, 0.3);
+            --highlight-blue: rgba(0, 0, 255, 0.3);
+            --highlight-pink: rgba(255, 0, 255, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #f0e6d2;
+            background-image: url('https://www.transparenttextures.com/patterns/parchment.png');
+            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+            color: var(--ink);
+            min-height: 100vh;
+            overflow-x: hidden;
+            touch-action: manipulation;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background-color: var(--parchment-dark);
+            border-bottom: 2px solid var(--border);
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+        }
+
+        .title-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .title {
+            font-family: 'Uncial Antiqua', cursive;
+            color: var(--accent);
+            font-size: 1.4rem;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+            padding: 5px 0;
+            text-align: center;
+        }
+
+        .title i {
+            margin-left: 5px;
+            font-size: 0.9rem;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: var(--accent);
+            padding: 5px;
+        }
+
+        /* Main Content */
+        .content {
+            padding: 70px 15px 80px;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+            flex: 1;
+            background-image: url('https://www.transparenttextures.com/patterns/scroll.png');
+            background-attachment: local;
+        }
+
+        .verse {
+            margin-bottom: 15px;
+            position: relative;
+            text-align: left;
+            padding-left: 25px;
+            line-height: 1.6;
+            font-size: 1.1rem;
+            break-inside: avoid;
+        }
+
+        .verse-number {
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 0.8rem;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 12px;
+            color: var(--accent);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border);
+            background-color: var(--parchment-dark);
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        /* Navigation */
+        .chapter-nav {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+
+        .chapter-nav button {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+        }
+
+        /* Loading state */
+        .loading {
+            text-align: center;
+            font-style: italic;
+            color: #666;
+            padding: 20px;
+        }
+
+        /* Book/Chapter Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: var(--parchment);
+            border: 2px solid var(--border);
+            border-radius: 5px;
+            width: 90%;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            padding: 15px;
+            background-color: var(--parchment-dark);
+            border-bottom: 1px solid var(--border);
+            font-family: 'Uncial Antiqua', cursive;
+            color: var(--accent);
+            font-size: 1.3rem;
+            text-align: center;
+        }
+
+        .modal-body {
+            padding: 15px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .testament-filter {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+            gap: 10px;
+        }
+
+        .filter-btn {
+            padding: 5px 10px;
+            border: 1px solid var(--border);
+            background-color: var(--parchment);
+            color: var(--accent);
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+        }
+
+        .filter-btn.active {
+            background-color: var(--accent);
+            color: var(--parchment);
+        }
+
+        .books-list, .chapters-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 8px;
+        }
+
+        .book-item, .chapter-item {
+            padding: 8px 5px;
+            text-align: center;
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .book-item:hover, .chapter-item:hover {
+            background-color: var(--parchment-dark);
+        }
+
+        .book-item.selected, .chapter-item.selected {
+            background-color: var(--accent);
+            color: var(--parchment);
+        }
+
+        @media (max-width: 500px) {
+            .verse-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="title-container" id="titleContainer">
+            <div class="title" id="current-reference">
+                Select a book and chapter <i class="fas fa-caret-down"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="content">
+        <div id="chapter-content" class="loading">
+            Content will appear here when a chapter is selected
+        </div>
+        
+        <div class="chapter-nav">
+            <button id="prev-chapter">Previous Chapter</button>
+            <button id="next-chapter">Next Chapter</button>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>New King James Version</p>
+    </footer>
+    
+    <!-- Book Selection Modal -->
+    <div class="modal" id="book-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                Select Scripture
+            </div>
+            <div class="modal-body">
+                <div class="testament-filter">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="old">Old Testament</button>
+                    <button class="filter-btn" data-filter="new">New Testament</button>
+                </div>
+                <div class="books-list" id="book-grid"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Chapter Selection Modal -->
+    <div class="modal" id="chapter-modal">
+        <div class="modal-content">
+            <div class="modal-header" id="chapter-modal-title">
+                Select a Chapter
+            </div>
+            <div class="modal-body">
+                <div class="chapters-list" id="chapter-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let bibleData = null;
+        let currentBook = null;
+        let currentChapter = null;
+        const books = [];
+        
+        // DOM elements
+        const chapterContent = document.getElementById('chapter-content');
+        const currentReference = document.getElementById('current-reference');
+        const prevChapterBtn = document.getElementById('prev-chapter');
+        const nextChapterBtn = document.getElementById('next-chapter');
+        const titleContainer = document.getElementById('titleContainer');
+        const bookModal = document.getElementById('book-modal');
+        const chapterModal = document.getElementById('chapter-modal');
+        const bookGrid = document.getElementById('book-grid');
+        const chapterGrid = document.getElementById('chapter-grid');
+        const chapterModalTitle = document.getElementById('chapter-modal-title');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        
+        // Load XML file
+        function loadBibleXML() {
+            fetch('nkjv.xml')
+                .then(response => response.text())
+                .then(xmlString => {
+                    const parser = new DOMParser();
+                    const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+                    bibleData = xmlDoc;
+                    parseBooks();
+                    populateBookGrid();
+                })
+                .catch(error => {
+                    console.error('Error loading XML:', error);
+                    chapterContent.innerHTML = 'Error loading Bible data. Please check console for details.';
+                });
+        }
+        
+        // Parse books from XML
+        function parseBooks() {
+            const bibleBooks = bibleData.getElementsByTagName('BIBLEBOOK');
+            for (let book of bibleBooks) {
+                const bookInfo = {
+                    number: book.getAttribute('bnumber'),
+                    name: book.getAttribute('bname'),
+                    chapters: []
+                };
+                
+                const chapters = book.getElementsByTagName('CHAPTER');
+                for (let chapter of chapters) {
+                    bookInfo.chapters.push({
+                        number: chapter.getAttribute('cnumber'),
+                        verses: []
+                    });
+                }
+                
+                books.push(bookInfo);
+            }
+        }
+        
+        // Populate book grid
+        function populateBookGrid(filter = 'all') {
+            bookGrid.innerHTML = '';
+            books.forEach((book, index) => {
+                // Apply filter
+                if (filter === 'old' && index >= 39) return; // NT starts at Matthew (index 39)
+                if (filter === 'new' && index < 39) return;
+                
+                const bookItem = document.createElement('div');
+                bookItem.className = 'book-item';
+                bookItem.textContent = book.name;
+                bookItem.dataset.bookNumber = book.number;
+                
+                bookItem.addEventListener('click', function() {
+                    currentBook = this.dataset.bookNumber;
+                    openChapterModal(books.find(b => b.number === currentBook));
+                    bookModal.classList.remove('active');
+                });
+                
+                bookGrid.appendChild(bookItem);
+            });
+        }
+        
+        // Open chapter modal
+        function openChapterModal(book) {
+            chapterGrid.innerHTML = '';
+            chapterModalTitle.textContent = book.name;
+            
+            book.chapters.forEach(chapter => {
+                const chapterItem = document.createElement('div');
+                chapterItem.className = 'chapter-item';
+                chapterItem.textContent = chapter.number;
+                chapterItem.dataset.chapterNumber = chapter.number;
+                
+                chapterItem.addEventListener('click', function() {
+                    currentChapter = this.dataset.chapterNumber;
+                    loadChapterContent();
+                    chapterModal.classList.remove('active');
+                });
+                
+                chapterGrid.appendChild(chapterItem);
+            });
+            
+            chapterModal.classList.add('active');
+        }
+        
+        // Load and display chapter content
+        function loadChapterContent() {
+            if (!currentBook || !currentChapter) return;
+            
+            chapterContent.innerHTML = '<div class="loading">Loading...</div>';
+            
+            const bookNode = bibleData.querySelector(`BIBLEBOOK[bnumber="${currentBook}"]`);
+            const chapterNode = bookNode.querySelector(`CHAPTER[cnumber="${currentChapter}"]`);
+            
+            if (!chapterNode) {
+                chapterContent.innerHTML = 'Chapter not found';
+                return;
+            }
+            
+            const verses = chapterNode.getElementsByTagName('VERS');
+            let contentHTML = '';
+            
+            for (let verse of verses) {
+                const verseNumber = verse.getAttribute('vnumber');
+                const verseText = verse.textContent.trim();
+                
+                contentHTML += `
+                    <div class="verse">
+                        <span class="verse-number">${verseNumber}</span>
+                        <span class="verse-text">${verseText}</span>
+                    </div>
+                `;
+            }
+            
+            const bookName = bookNode.getAttribute('bname');
+            currentReference.innerHTML = `${bookName} ${currentChapter} <i class="fas fa-caret-down"></i>`;
+            chapterContent.innerHTML = contentHTML;
+        }
+        
+        // Navigation handlers
+        prevChapterBtn.addEventListener('click', function() {
+            if (!currentBook || !currentChapter) return;
+            
+            const currentChapterNum = parseInt(currentChapter);
+            if (currentChapterNum > 1) {
+                currentChapter = (currentChapterNum - 1).toString();
+                loadChapterContent();
+            }
+        });
+        
+        nextChapterBtn.addEventListener('click', function() {
+            if (!currentBook || !currentChapter) return;
+            
+            const selectedBook = books.find(b => b.number === currentBook);
+            const currentChapterNum = parseInt(currentChapter);
+            
+            if (currentChapterNum < selectedBook.chapters.length) {
+                currentChapter = (currentChapterNum + 1).toString();
+                loadChapterContent();
+            }
+        });
+        
+        // Title click handler
+        titleContainer.addEventListener('click', function() {
+            bookModal.classList.add('active');
+        });
+        
+        // Modal close handlers
+        window.addEventListener('click', function(event) {
+            if (event.target === bookModal) {
+                bookModal.classList.remove('active');
+            }
+            if (event.target === chapterModal) {
+                chapterModal.classList.remove('active');
+            }
+        });
+        
+        // Filter tab handlers
+        filterButtons.forEach(tab => {
+            tab.addEventListener('click', function() {
+                filterButtons.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                populateBookGrid(this.dataset.filter);
+            });
+        });
+        
+        // Initialize
+        loadBibleXML();
+    </script>
+</body>
+</html>
