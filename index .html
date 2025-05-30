@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brandshuz - Stylish Ladies' Shoes</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Roboto:wght@400&display=swap" rel="stylesheet">
+    <style>
+        /* Basic styles for the header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+            position: relative; /* For positioning the menu */
+        }
+
+        /* Styles for the sidebar navigation */
+        .sidebar {
+            position: fixed; /* Fix to the side */
+            top: 0;
+            left: -250px; /* Initially hidden off-screen */
+            width: 250px;
+            height: 100%;
+            background-color: yellow; /* Yellow background */
+            box-shadow: 2px 0 5px rgba(0,0,0,0.5);
+            transition: left 0.3s ease; /* Smooth transition */
+            z-index: 1000; /* Ensure it appears above other content */
+            padding-top: 60px; /* Space below the header */
+            display: flex;
+            flex-direction: column; /* Aligns items vertically */
+            align-items: center; /* Center items */
+        }
+
+        .sidebar.open {
+            left: 0; /* Show the sidebar */
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+            width: 100%; /* Full width for alignment */
+            display: flex; /* Align items horizontally */
+            flex-direction: column; /* Vertical arrangement */
+            align-items: center; /* Center items */
+        }
+
+        .sidebar ul li {
+            width: 100%; /* Full width for each item */
+        }
+
+        .sidebar ul li a {
+            padding: 15px;
+            text-decoration: none;
+            color: black; /* Black text color */
+            display: block;
+            text-align: center; /* Center align the text */
+            width: 100%; /* Make the links fill the container */
+        }
+
+        .sidebar ul li a:hover {
+            background-color: #f1f1f1; /* Hover effect */
+        }
+
+        /* Styles for the hamburger icon */
+        .hamburger {
+            display: flex; /* Show the hamburger */
+            flex-direction: column;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .line {
+            height: 3px;
+            width: 25px;
+            background-color: #333;
+            margin: 4px 0;
+        }
+
+        /* Styles for the search bar */
+        .search-bar {
+            margin-top: 20px; /* Space above the search bar */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .search-bar input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 250px; /* Width of the search input */
+        }
+
+        .search-bar button {
+            padding: 10px 15px;
+            margin-left: 10px;
+            background-color: #333; /* Dark background for the button */
+            color: white; /* White text */
+            border: none;
+            border-radius: 4px;
+            cursor: pointer; /* Pointer cursor on hover */
+        }
+
+        .search-bar button:hover {
+            background-color: #555; /* Darker shade on hover */
+        }
+
+        .no-results {
+            color: red; /* Color for no results message */
+            margin-top: 20px; /* Space above the message */
+        }
+
+        /* Additional styling for product display */
+        .product-list {
+            display: flex; /* Use flexbox for products */
+            flex-wrap: wrap; /* Wrap products to the next line */
+            justify-content: center; /* Center the products */
+        }
+
+        .product {
+            margin: 10px; /* Spacing around products */
+            text-align: center; /* Center product text */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="hamburger" id="hamburger">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+        </div>
+        <h1 class="brand-title">Brandshuz</h1>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section id="home" class="hero-section">
+        <h2>Your Ultimate Shoe Destination</h2>
+        <p>Explore our exclusive collection of stylish ladies' shoes</p>
+        <a href="products.html" class="shop-now">Shop Now</a>
+        
+        <!-- Search bar -->
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search for products...">
+            <button id="searchButton">Search</button>
+        </div>
+        <div class="no-results" id="noResults" style="display: none;">No products found.</div>
+    </section>
+
+    <section id="products" class="products-section">
+        <h2>Featured Products</h2>
+        <div class="product-list" id="productList">
+            <div class="product" id="product1">
+                <a href="product1.html">
+                    <img src="shoe1.jpg" alt="Stylish Heels">
+                    <h3>Elegant Heels</h3>
+                    <p>$45.00</p>
+                </a>
+            </div>
+            <div class="product" id="product2">
+                <a href="product2.html">
+                    <img src="shoe2.jpg" alt="Comfortable Flats">
+                    <h3>Comfort Flats</h3>
+                    <p>$30.00</p>
+                </a>
+            </div>
+            <div class="product" id="product3">
+                <a href="product3.html">
+                    <img src="shoe3.jpg" alt="Trendy Sneakers">
+                    <h3>Trendy Sneakers</h3>
+                    <p>$50.00</p>
+                </a>
+            </div>
+            <div class="product" id="product4">
+                <a href="product4.html">
+                    <img src="shoe4.jpg" alt="Classic Boots">
+                    <h3>Classic Boots</h3>
+                    <p>$70.00</p>
+                </a>
+            </div>
+            <!-- Add more products as needed -->
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Brandshuz. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // JavaScript for toggling the sidebar menu
+        const hamburger = document.getElementById('hamburger');
+        const sidebar = document.getElementById('sidebar');
+
+        hamburger.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+        });
+
+        // Product data for search functionality
+        const productsData = [
+            { id: 'product1', name: 'Elegant Heels' },
+            { id: 'product2', name: 'Comfort Flats' },
+            { id: 'product3', name: 'Trendy Sneakers' },
+            { id: 'product4', name: 'Classic Boots' }
+            // Add more products as needed
+        ];
+
+        // Function to show matching products
+        const searchButton = document.getElementById('searchButton');
+        const searchInput = document.getElementById('searchInput');
+        const noResults = document.getElementById('noResults');
+
+        searchButton.addEventListener('click', () => {
+            const searchTerm = searchInput.value.toLowerCase();
+            let found = false; // Flag to track if any products were found
+
+            // Loop through each product in the product list
+            productsData.forEach(product => {
+                const productElement = document.getElementById(product.id);
+                if (product.name.toLowerCase().includes(searchTerm)) {
+                    productElement.style.display = 'block'; // Show matching product
+                    found = true; // Set found flag to true
+                } else {
+                    productElement.style.display = 'none'; // Hide non-matching product
+                }
+            });
+
+            // Show or hide the no results message
+            noResults.style.display = found ? 'none' : 'block'; // Display message if no matches found
+        });
+
+        // Initial setup for displaying products
+        const showAllProducts = () => {
+            productsData.forEach(product => {
+                document.getElementById(product.id).style.display = 'block'; // Show all products initially
+            });
+        };
+
+        showAllProducts(); // Call to show all products when the page loads
+    </script>
+</body>
+</html>
