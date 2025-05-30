@@ -22,6 +22,7 @@
             margin: 0;
             padding: 0;
             -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
 
         body {
@@ -32,8 +33,6 @@
             min-height: 100vh;
             overflow-x: hidden;
             touch-action: manipulation;
-            display: flex;
-            flex-direction: column;
         }
 
         /* Header */
@@ -77,10 +76,15 @@
             font-size: 0.9rem;
         }
 
-        .menu-btn {
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .header-btn {
             background: none;
             border: none;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             cursor: pointer;
             color: var(--accent);
             padding: 5px;
@@ -92,9 +96,6 @@
             max-width: 800px;
             margin: 0 auto;
             width: 100%;
-            flex: 1;
-            background-image: url('https://www.transparenttextures.com/patterns/scroll.png');
-            background-attachment: local;
         }
 
         .verse {
@@ -105,6 +106,12 @@
             line-height: 1.6;
             font-size: 1.1rem;
             break-inside: avoid;
+            border-radius: 3px;
+            transition: background-color 0.2s;
+        }
+
+        .verse.selected {
+            background-color: rgba(139, 90, 43, 0.1);
         }
 
         .verse-number {
@@ -114,6 +121,48 @@
             font-size: 0.8rem;
             color: var(--accent);
             font-weight: bold;
+        }
+
+        .verse-actions {
+            position: absolute;
+            right: 5px;
+            top: 0;
+            opacity: 0;
+            transition: opacity 0.2s;
+            background-color: var(--parchment-dark);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .verse:hover .verse-actions,
+        .verse.selected .verse-actions {
+            opacity: 1;
+        }
+
+        /* Verse highlights */
+        .highlighted-yellow {
+            background-color: var(--highlight-yellow);
+        }
+
+        .highlighted-green {
+            background-color: var(--highlight-green);
+        }
+
+        .highlighted-blue {
+            background-color: var(--highlight-blue);
+        }
+
+        .highlighted-pink {
+            background-color: var(--highlight-pink);
+        }
+
+        .underlined {
+            text-decoration: underline;
         }
 
         /* Footer */
@@ -154,7 +203,7 @@
             padding: 20px;
         }
 
-        /* Book/Chapter Modal */
+        /* Modals */
         .modal {
             position: fixed;
             top: 0;
@@ -200,6 +249,15 @@
             flex-grow: 1;
         }
 
+        .modal-footer {
+            padding: 15px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Book/Chapter Selection */
         .testament-filter {
             display: flex;
             justify-content: center;
@@ -247,6 +305,141 @@
             color: var(--parchment);
         }
 
+        /* Annotation Modal */
+        .annotation-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .annotation-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background-color: var(--parchment);
+            transition: transform 0.2s;
+        }
+
+        .annotation-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .highlight-yellow {
+            background-color: var(--highlight-yellow);
+        }
+
+        .highlight-green {
+            background-color: var(--highlight-green);
+        }
+
+        .highlight-blue {
+            background-color: var(--highlight-blue);
+        }
+
+        .highlight-pink {
+            background-color: var(--highlight-pink);
+        }
+
+        .note-input-group {
+            margin-bottom: 15px;
+        }
+
+        .note-input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--accent);
+        }
+
+        .note-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            font-family: inherit;
+        }
+
+        .note-textarea {
+            height: 100px;
+            resize: none;
+        }
+
+        .action-btn {
+            padding: 8px 15px;
+            border: 1px solid var(--border);
+            background-color: var(--parchment);
+            color: var(--accent);
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .action-btn.primary {
+            background-color: var(--accent);
+            color: var(--parchment);
+        }
+
+        /* Highlights Modal */
+        .highlights-list {
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .highlight-item {
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+        .highlight-item:hover {
+            background-color: var(--parchment-dark);
+        }
+
+        .highlight-reference {
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        .highlight-title {
+            margin: 5px 0;
+        }
+
+        .highlight-content {
+            font-style: italic;
+            margin-bottom: 5px;
+        }
+
+        .highlight-note {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Menu Modal */
+        .menu-links {
+            list-style: none;
+        }
+
+        .menu-links li {
+            margin-bottom: 10px;
+        }
+
+        .menu-links a {
+            display: block;
+            padding: 10px;
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .menu-links a:hover {
+            background-color: var(--parchment-dark);
+        }
+
         @media (max-width: 500px) {
             .verse-container {
                 grid-template-columns: 1fr;
@@ -263,6 +456,14 @@
             <div class="title" id="current-reference">
                 Select a book and chapter <i class="fas fa-caret-down"></i>
             </div>
+        </div>
+        <div class="header-actions">
+            <button class="header-btn" id="favorites-btn" title="View Highlights">
+                <i class="fas fa-bookmark"></i>
+            </button>
+            <button class="header-btn" id="menu-btn" title="Menu">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
     </header>
 
@@ -311,6 +512,87 @@
             </div>
         </div>
     </div>
+    
+    <!-- Annotation Modal -->
+    <div class="modal" id="annotation-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                Annotate Verse
+            </div>
+            <div class="modal-body">
+                <div class="annotation-options">
+                    <button class="annotation-btn highlight-yellow" data-action="highlight" data-color="yellow" title="Yellow Highlight">
+                        <i class="fas fa-highlighter"></i>
+                    </button>
+                    <button class="annotation-btn highlight-green" data-action="highlight" data-color="green" title="Green Highlight">
+                        <i class="fas fa-highlighter"></i>
+                    </button>
+                    <button class="annotation-btn highlight-blue" data-action="highlight" data-color="blue" title="Blue Highlight">
+                        <i class="fas fa-highlighter"></i>
+                    </button>
+                    <button class="annotation-btn highlight-pink" data-action="highlight" data-color="pink" title="Pink Highlight">
+                        <i class="fas fa-highlighter"></i>
+                    </button>
+                    <button class="annotation-btn" data-action="underline" title="Underline">
+                        <i class="fas fa-underline"></i>
+                    </button>
+                    <button class="annotation-btn" data-action="clear" title="Clear Formatting">
+                        <i class="fas fa-eraser"></i>
+                    </button>
+                </div>
+                
+                <div class="note-input-group">
+                    <label for="note-title">Title (optional)</label>
+                    <input type="text" id="note-title" class="note-input" placeholder="Title for this annotation">
+                </div>
+                
+                <div class="note-input-group">
+                    <label for="note-text">Notes</label>
+                    <textarea id="note-text" class="note-input note-textarea" placeholder="Add your notes here..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn" id="cancel-annotation">Cancel</button>
+                <button class="action-btn primary" id="save-annotation">Save</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Highlights Modal -->
+    <div class="modal" id="highlights-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                Your Highlights & Notes
+            </div>
+            <div class="modal-body">
+                <div class="highlights-list" id="highlights-list">
+                    <!-- Highlights will be populated here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn primary" id="close-highlights">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Menu Modal -->
+    <div class="modal" id="menu-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                Menu
+            </div>
+            <div class="modal-body">
+                <ul class="menu-links">
+                    <li><a href="#" id="menu-highlights"><i class="fas fa-bookmark"></i> Highlights & Notes</a></li>
+                    <li><a href="#" id="menu-settings"><i class="fas fa-cog"></i> Settings</a></li>
+                    <li><a href="#" id="menu-about"><i class="fas fa-info-circle"></i> About</a></li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn primary" id="close-menu">Close</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         // Global variables
@@ -318,6 +600,8 @@
         let currentBook = null;
         let currentChapter = null;
         const books = [];
+        let selectedVerse = null;
+        let highlights = JSON.parse(localStorage.getItem('bibleHighlights')) || {};
         
         // DOM elements
         const chapterContent = document.getElementById('chapter-content');
@@ -331,6 +615,14 @@
         const chapterGrid = document.getElementById('chapter-grid');
         const chapterModalTitle = document.getElementById('chapter-modal-title');
         const filterButtons = document.querySelectorAll('.filter-btn');
+        const annotationModal = document.getElementById('annotation-modal');
+        const highlightsModal = document.getElementById('highlights-modal');
+        const menuModal = document.getElementById('menu-modal');
+        const favoritesBtn = document.getElementById('favorites-btn');
+        const menuBtn = document.getElementById('menu-btn');
+        const highlightsList = document.getElementById('highlights-list');
+        const noteTitleInput = document.getElementById('note-title');
+        const noteTextInput = document.getElementById('note-text');
         
         // Load XML file
         function loadBibleXML() {
@@ -376,7 +668,7 @@
             bookGrid.innerHTML = '';
             books.forEach((book, index) => {
                 // Apply filter
-                if (filter === 'old' && index >= 39) return; // NT starts at Matthew (index 39)
+                if (filter === 'old' && index >= 39) return;
                 if (filter === 'new' && index < 39) return;
                 
                 const bookItem = document.createElement('div');
@@ -437,11 +729,25 @@
             for (let verse of verses) {
                 const verseNumber = verse.getAttribute('vnumber');
                 const verseText = verse.textContent.trim();
+                const verseKey = `${currentBook}-${currentChapter}-${verseNumber}`;
+                const verseHighlight = highlights[verseKey] || {};
+                
+                // Determine verse classes based on saved highlights
+                let verseClasses = '';
+                if (verseHighlight.highlight) {
+                    verseClasses += ` highlighted-${verseHighlight.highlight}`;
+                }
+                if (verseHighlight.underline) {
+                    verseClasses += ' underlined';
+                }
                 
                 contentHTML += `
-                    <div class="verse">
+                    <div class="verse" data-verse-key="${verseKey}">
                         <span class="verse-number">${verseNumber}</span>
-                        <span class="verse-text">${verseText}</span>
+                        <span class="verse-text${verseClasses}">${verseText}</span>
+                        <div class="verse-actions">
+                            <i class="fas fa-plus"></i>
+                        </div>
                     </div>
                 `;
             }
@@ -449,6 +755,162 @@
             const bookName = bookNode.getAttribute('bname');
             currentReference.innerHTML = `${bookName} ${currentChapter} <i class="fas fa-caret-down"></i>`;
             chapterContent.innerHTML = contentHTML;
+            
+            // Add event listeners to verses
+            setupVerseInteractions();
+            
+            // Reset scroll position
+            window.scrollTo(0, 0);
+        }
+        
+        // Setup verse interactions
+        function setupVerseInteractions() {
+            const verses = document.querySelectorAll('.verse');
+            
+            verses.forEach(verse => {
+                const verseActions = verse.querySelector('.verse-actions');
+                const verseKey = verse.dataset.verseKey;
+                
+                // Verse click handler
+                verse.addEventListener('click', function(e) {
+                    // Don't toggle if clicking on the actions button
+                    if (e.target.closest('.verse-actions')) return;
+                    
+                    // Toggle selection
+                    verses.forEach(v => v.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedVerse = this;
+                });
+                
+                // Verse actions click handler
+                verseActions.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    
+                    // Select the verse
+                    verses.forEach(v => v.classList.remove('selected'));
+                    verse.classList.add('selected');
+                    selectedVerse = verse;
+                    
+                    // Open annotation modal
+                    openAnnotationModal(verseKey);
+                });
+            });
+        }
+        
+        // Open annotation modal
+        function openAnnotationModal(verseKey) {
+            // Load existing annotation if it exists
+            const annotation = highlights[verseKey] || {};
+            
+            noteTitleInput.value = annotation.title || '';
+            noteTextInput.value = annotation.note || '';
+            
+            annotationModal.classList.add('active');
+        }
+        
+        // Save annotation
+        function saveAnnotation() {
+            if (!selectedVerse) return;
+            
+            const verseKey = selectedVerse.dataset.verseKey;
+            const verseText = selectedVerse.querySelector('.verse-text');
+            
+            // Get current classes to determine what's applied
+            const hasHighlight = ['highlighted-yellow', 'highlighted-green', 'highlighted-blue', 'highlighted-pink']
+                .some(cls => verseText.classList.contains(cls));
+            const hasUnderline = verseText.classList.contains('underlined');
+            
+            // Save to highlights object
+            highlights[verseKey] = {
+                title: noteTitleInput.value.trim(),
+                note: noteTextInput.value.trim(),
+                highlight: hasHighlight ? 
+                    (verseText.classList.contains('highlighted-yellow') ? 'yellow' :
+                     verseText.classList.contains('highlighted-green') ? 'green' :
+                     verseText.classList.contains('highlighted-blue') ? 'blue' : 'pink') : null,
+                underline: hasUnderline,
+                book: currentBook,
+                chapter: currentChapter,
+                verse: verseKey.split('-')[2],
+                date: new Date().toISOString()
+            };
+            
+            // Save to localStorage
+            localStorage.setItem('bibleHighlights', JSON.stringify(highlights));
+            
+            // Close modal
+            annotationModal.classList.remove('active');
+        }
+        
+        // Load highlights list
+        function loadHighlightsList() {
+            highlightsList.innerHTML = '';
+            
+            const sortedHighlights = Object.entries(highlights)
+                .sort((a, b) => new Date(b[1].date) - new Date(a[1].date));
+            
+            if (sortedHighlights.length === 0) {
+                highlightsList.innerHTML = '<p style="text-align: center; color: #666;">No highlights or notes yet</p>';
+                return;
+            }
+            
+            sortedHighlights.forEach(([verseKey, highlight]) => {
+                const book = books.find(b => b.number === highlight.book);
+                const bookName = book ? book.name : 'Unknown Book';
+                
+                const highlightItem = document.createElement('div');
+                highlightItem.className = 'highlight-item';
+                highlightItem.dataset.verseKey = verseKey;
+                
+                highlightItem.innerHTML = `
+                    <div class="highlight-reference">${bookName} ${highlight.chapter}:${highlight.verse}</div>
+                    ${highlight.title ? `<div class="highlight-title">${highlight.title}</div>` : ''}
+                    <div class="highlight-content">${getVerseText(verseKey)}</div>
+                    ${highlight.note ? `<div class="highlight-note">${highlight.note}</div>` : ''}
+                `;
+                
+                highlightItem.addEventListener('click', function() {
+                    navigateToHighlight(verseKey);
+                    highlightsModal.classList.remove('active');
+                });
+                
+                highlightsList.appendChild(highlightItem);
+            });
+        }
+        
+        // Get verse text from XML
+        function getVerseText(verseKey) {
+            const [bookNum, chapterNum, verseNum] = verseKey.split('-');
+            const bookNode = bibleData.querySelector(`BIBLEBOOK[bnumber="${bookNum}"]`);
+            if (!bookNode) return '[Verse text not available]';
+            
+            const chapterNode = bookNode.querySelector(`CHAPTER[cnumber="${chapterNum}"]`);
+            if (!chapterNode) return '[Verse text not available]';
+            
+            const verseNode = chapterNode.querySelector(`VERS[vnumber="${verseNum}"]`);
+            return verseNode ? verseNode.textContent.trim() : '[Verse text not available]';
+        }
+        
+        // Navigate to a highlighted verse
+        function navigateToHighlight(verseKey) {
+            const [bookNum, chapterNum, verseNum] = verseKey.split('-');
+            
+            // Load the chapter if not already loaded
+            if (currentBook !== bookNum || currentChapter !== chapterNum) {
+                currentBook = bookNum;
+                currentChapter = chapterNum;
+                loadChapterContent();
+            }
+            
+            // Scroll to the verse after content loads
+            setTimeout(() => {
+                const verseElement = document.querySelector(`.verse[data-verse-key="${verseKey}"]`);
+                if (verseElement) {
+                    verseElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    verseElement.classList.add('selected');
+                    selectedVerse = verseElement;
+                }
+            }, 100);
         }
         
         // Navigation handlers
@@ -487,6 +949,15 @@
             if (event.target === chapterModal) {
                 chapterModal.classList.remove('active');
             }
+            if (event.target === annotationModal) {
+                annotationModal.classList.remove('active');
+            }
+            if (event.target === highlightsModal) {
+                highlightsModal.classList.remove('active');
+            }
+            if (event.target === menuModal) {
+                menuModal.classList.remove('active');
+            }
         });
         
         // Filter tab handlers
@@ -496,6 +967,65 @@
                 this.classList.add('active');
                 populateBookGrid(this.dataset.filter);
             });
+        });
+        
+        // Annotation modal handlers
+        document.querySelectorAll('.annotation-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (!selectedVerse) return;
+                
+                const action = this.dataset.action;
+                const color = this.dataset.color;
+                const verseText = selectedVerse.querySelector('.verse-text');
+                
+                if (action === 'highlight') {
+                    // Remove any existing highlight classes
+                    verseText.classList.remove(
+                        'highlighted-yellow', 'highlighted-green', 
+                        'highlighted-blue', 'highlighted-pink'
+                    );
+                    // Add new highlight
+                    verseText.classList.add(`highlighted-${color}`);
+                } 
+                else if (action === 'underline') {
+                    verseText.classList.toggle('underlined');
+                }
+                else if (action === 'clear') {
+                    // Clear all formatting
+                    verseText.className = 'verse-text';
+                }
+            });
+        });
+        
+        document.getElementById('save-annotation').addEventListener('click', saveAnnotation);
+        document.getElementById('cancel-annotation').addEventListener('click', function() {
+            annotationModal.classList.remove('active');
+        });
+        
+        // Highlights modal handlers
+        favoritesBtn.addEventListener('click', function() {
+            loadHighlightsList();
+            highlightsModal.classList.add('active');
+        });
+        
+        document.getElementById('close-highlights').addEventListener('click', function() {
+            highlightsModal.classList.remove('active');
+        });
+        
+        // Menu modal handlers
+        menuBtn.addEventListener('click', function() {
+            menuModal.classList.add('active');
+        });
+        
+        document.getElementById('close-menu').addEventListener('click', function() {
+            menuModal.classList.remove('active');
+        });
+        
+        document.getElementById('menu-highlights').addEventListener('click', function(e) {
+            e.preventDefault();
+            menuModal.classList.remove('active');
+            loadHighlightsList();
+            highlightsModal.classList.add('active');
         });
         
         // Initialize
