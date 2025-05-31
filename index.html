@@ -144,6 +144,14 @@
             opacity: 1;
         }
 
+        .verse-annotation {
+            font-size: 0.7rem;
+            color: var(--accent);
+            margin-top: 3px;
+            padding-left: 25px;
+            font-style: italic;
+        }
+
         /* Verse highlights */
         .highlighted-yellow {
             background-color: var(--highlight-yellow);
@@ -180,19 +188,7 @@
 
         /* Navigation */
         .chapter-nav {
-            display: flex;
-            justify-content: space-between;
-            margin: 20px 0;
-        }
-
-        .chapter-nav button {
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+            display: none;
         }
 
         /* Loading state */
@@ -384,6 +380,145 @@
             color: var(--parchment);
         }
 
+        /* Heading Select */
+        .heading-select-container {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .heading-select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            font-family: inherit;
+            appearance: none;
+            background-color: var(--parchment);
+            color: var(--ink);
+        }
+
+        .add-heading-btn {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            color: var(--parchment);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* New Heading Modal */
+        .new-heading-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1001;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .new-heading-modal.active {
+            display: flex;
+        }
+
+        .new-heading-content {
+            background-color: var(--parchment);
+            border: 2px solid var(--border);
+            border-radius: 5px;
+            width: 90%;
+            max-width: 300px;
+            padding: 15px;
+        }
+
+        .new-heading-input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border);
+            border-radius: 3px;
+        }
+
+        /* Search Modal */
+        .search-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1001;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .search-modal.active {
+            display: flex;
+        }
+
+        .search-content {
+            background-color: var(--parchment);
+            border: 2px solid var(--border);
+            border-radius: 5px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .search-header {
+            padding: 15px;
+            background-color: var(--parchment-dark);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            font-family: inherit;
+        }
+
+        .search-results {
+            padding: 15px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .search-result-item {
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+        .search-result-item:hover {
+            background-color: var(--parchment-dark);
+        }
+
+        .search-result-reference {
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        .search-result-text {
+            margin: 5px 0;
+        }
+
         /* Highlights Modal */
         .highlights-list {
             max-height: 60vh;
@@ -454,10 +589,13 @@
     <header class="header">
         <div class="title-container" id="titleContainer">
             <div class="title" id="current-reference">
-                Select a book and chapter <i class="fas fa-caret-down"></i>
+                Genesis 1 <i class="fas fa-caret-down"></i>
             </div>
         </div>
         <div class="header-actions">
+            <button class="header-btn" id="search-btn" title="Search">
+                <i class="fas fa-search"></i>
+            </button>
             <button class="header-btn" id="favorites-btn" title="View Highlights">
                 <i class="fas fa-bookmark"></i>
             </button>
@@ -468,14 +606,9 @@
     </header>
 
     <!-- Main Content -->
-    <main class="content">
+    <main class="content" id="content">
         <div id="chapter-content" class="loading">
-            Content will appear here when a chapter is selected
-        </div>
-        
-        <div class="chapter-nav">
-            <button id="prev-chapter">Previous Chapter</button>
-            <button id="next-chapter">Next Chapter</button>
+            Loading Genesis 1...
         </div>
     </main>
 
@@ -520,6 +653,15 @@
                 Annotate Verse
             </div>
             <div class="modal-body">
+                <div class="heading-select-container">
+                    <select id="heading-select" class="heading-select">
+                        <!-- Headings will be populated here -->
+                    </select>
+                    <button class="add-heading-btn" id="add-heading-btn">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+                
                 <div class="annotation-options">
                     <button class="annotation-btn highlight-yellow" data-action="highlight" data-color="yellow" title="Yellow Highlight">
                         <i class="fas fa-highlighter"></i>
@@ -554,6 +696,36 @@
             <div class="modal-footer">
                 <button class="action-btn" id="cancel-annotation">Cancel</button>
                 <button class="action-btn primary" id="save-annotation">Save</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- New Heading Modal -->
+    <div class="new-heading-modal" id="new-heading-modal">
+        <div class="new-heading-content">
+            <h3>Create New Heading</h3>
+            <input type="text" id="new-heading-input" class="new-heading-input" placeholder="Enter heading name">
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button class="action-btn" id="cancel-new-heading">Cancel</button>
+                <button class="action-btn primary" id="save-new-heading">Save</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Search Modal -->
+    <div class="search-modal" id="search-modal">
+        <div class="search-content">
+            <div class="search-header">
+                <input type="text" id="search-input" class="search-input" placeholder="Search Bible...">
+                <button class="header-btn" id="close-search" style="margin-left: 10px;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="search-results" id="search-results">
+                <!-- Search results will appear here -->
+                <div style="text-align: center; padding: 20px; color: #666;">
+                    Enter search terms above
+                </div>
             </div>
         </div>
     </div>
@@ -597,17 +769,18 @@
     <script>
         // Global variables
         let bibleData = null;
-        let currentBook = null;
-        let currentChapter = null;
+        let currentBook = "1"; // Default to Genesis (book number 1)
+        let currentChapter = "1"; // Default to chapter 1
         const books = [];
         let selectedVerse = null;
         let highlights = JSON.parse(localStorage.getItem('bibleHighlights')) || {};
+        let headings = JSON.parse(localStorage.getItem('bibleHeadings')) || ["Default"];
+        let currentHeading = headings[headings.length - 1]; // Default to last used heading
         
         // DOM elements
         const chapterContent = document.getElementById('chapter-content');
         const currentReference = document.getElementById('current-reference');
-        const prevChapterBtn = document.getElementById('prev-chapter');
-        const nextChapterBtn = document.getElementById('next-chapter');
+        const contentElement = document.getElementById('content');
         const titleContainer = document.getElementById('titleContainer');
         const bookModal = document.getElementById('book-modal');
         const chapterModal = document.getElementById('chapter-modal');
@@ -618,11 +791,27 @@
         const annotationModal = document.getElementById('annotation-modal');
         const highlightsModal = document.getElementById('highlights-modal');
         const menuModal = document.getElementById('menu-modal');
+        const searchModal = document.getElementById('search-modal');
+        const searchBtn = document.getElementById('search-btn');
+        const searchInput = document.getElementById('search-input');
+        const searchResults = document.getElementById('search-results');
+        const closeSearchBtn = document.getElementById('close-search');
         const favoritesBtn = document.getElementById('favorites-btn');
         const menuBtn = document.getElementById('menu-btn');
         const highlightsList = document.getElementById('highlights-list');
         const noteTitleInput = document.getElementById('note-title');
         const noteTextInput = document.getElementById('note-text');
+        const headingSelect = document.getElementById('heading-select');
+        const addHeadingBtn = document.getElementById('add-heading-btn');
+        const newHeadingModal = document.getElementById('new-heading-modal');
+        const newHeadingInput = document.getElementById('new-heading-input');
+        const saveNewHeadingBtn = document.getElementById('save-new-heading');
+        const cancelNewHeadingBtn = document.getElementById('cancel-new-heading');
+        
+        // Swipe variables
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const SWIPE_THRESHOLD = 50; // Minimum swipe distance to trigger navigation
         
         // Load XML file
         function loadBibleXML() {
@@ -634,6 +823,8 @@
                     bibleData = xmlDoc;
                     parseBooks();
                     populateBookGrid();
+                    loadChapterContent(); // Load Genesis 1:1 by default
+                    updateHeadingSelect(); // Initialize heading select dropdown
                 })
                 .catch(error => {
                     console.error('Error loading XML:', error);
@@ -748,6 +939,7 @@
                         <div class="verse-actions">
                             <i class="fas fa-plus"></i>
                         </div>
+                        ${verseHighlight.heading ? `<div class="verse-annotation">${verseHighlight.heading}</div>` : ''}
                     </div>
                 `;
             }
@@ -776,6 +968,13 @@
                     // Don't toggle if clicking on the actions button
                     if (e.target.closest('.verse-actions')) return;
                     
+                    // If already selected, deselect it
+                    if (this.classList.contains('selected')) {
+                        this.classList.remove('selected');
+                        selectedVerse = null;
+                        return;
+                    }
+                    
                     // Toggle selection
                     verses.forEach(v => v.classList.remove('selected'));
                     this.classList.add('selected');
@@ -797,6 +996,21 @@
             });
         }
         
+        // Update heading select dropdown
+        function updateHeadingSelect() {
+            headingSelect.innerHTML = '';
+            
+            headings.forEach(heading => {
+                const option = document.createElement('option');
+                option.value = heading;
+                option.textContent = heading;
+                headingSelect.appendChild(option);
+            });
+            
+            // Set the current heading as selected
+            headingSelect.value = currentHeading;
+        }
+        
         // Open annotation modal
         function openAnnotationModal(verseKey) {
             // Load existing annotation if it exists
@@ -804,6 +1018,14 @@
             
             noteTitleInput.value = annotation.title || '';
             noteTextInput.value = annotation.note || '';
+            
+            // Update heading select with current headings
+            updateHeadingSelect();
+            
+            // Set the heading from the annotation if it exists
+            if (annotation.heading) {
+                headingSelect.value = annotation.heading;
+            }
             
             annotationModal.classList.add('active');
         }
@@ -814,6 +1036,7 @@
             
             const verseKey = selectedVerse.dataset.verseKey;
             const verseText = selectedVerse.querySelector('.verse-text');
+            const heading = headingSelect.value;
             
             // Get current classes to determine what's applied
             const hasHighlight = ['highlighted-yellow', 'highlighted-green', 'highlighted-blue', 'highlighted-pink']
@@ -829,17 +1052,128 @@
                      verseText.classList.contains('highlighted-green') ? 'green' :
                      verseText.classList.contains('highlighted-blue') ? 'blue' : 'pink') : null,
                 underline: hasUnderline,
+                heading: heading,
                 book: currentBook,
                 chapter: currentChapter,
                 verse: verseKey.split('-')[2],
                 date: new Date().toISOString()
             };
             
+            // Update current heading
+            currentHeading = heading;
+            
             // Save to localStorage
             localStorage.setItem('bibleHighlights', JSON.stringify(highlights));
             
+            // Reload the chapter to show the new annotation
+            loadChapterContent();
+            
             // Close modal
             annotationModal.classList.remove('active');
+        }
+        
+        // Add new heading
+        function addNewHeading() {
+            const headingName = newHeadingInput.value.trim();
+            
+            if (headingName && !headings.includes(headingName)) {
+                headings.push(headingName);
+                localStorage.setItem('bibleHeadings', JSON.stringify(headings));
+                currentHeading = headingName;
+                updateHeadingSelect();
+                newHeadingInput.value = '';
+                newHeadingModal.classList.remove('active');
+            }
+        }
+        
+        // Search Bible text
+        function searchBible(query) {
+            if (!query || !bibleData) return;
+            
+            searchResults.innerHTML = '<div style="text-align: center; padding: 20px; color: #666;">Searching...</div>';
+            
+            // Simple search implementation (case insensitive)
+            const results = [];
+            const queryLower = query.toLowerCase();
+            
+            const bibleBooks = bibleData.getElementsByTagName('BIBLEBOOK');
+            for (let book of bibleBooks) {
+                const bookNum = book.getAttribute('bnumber');
+                const bookName = book.getAttribute('bname');
+                
+                const chapters = book.getElementsByTagName('CHAPTER');
+                for (let chapter of chapters) {
+                    const chapterNum = chapter.getAttribute('cnumber');
+                    
+                    const verses = chapter.getElementsByTagName('VERS');
+                    for (let verse of verses) {
+                        const verseNum = verse.getAttribute('vnumber');
+                        const verseText = verse.textContent.trim();
+                        
+                        if (verseText.toLowerCase().includes(queryLower)) {
+                            results.push({
+                                bookNum,
+                                bookName,
+                                chapterNum,
+                                verseNum,
+                                verseText
+                            });
+                            
+                            // Limit to 100 results for performance
+                            if (results.length >= 100) break;
+                        }
+                    }
+                    if (results.length >= 100) break;
+                }
+                if (results.length >= 100) break;
+            }
+            
+            // Display results
+            if (results.length === 0) {
+                searchResults.innerHTML = '<div style="text-align: center; padding: 20px; color: #666;">No results found</div>';
+                return;
+            }
+            
+            let resultsHTML = '';
+            results.forEach(result => {
+                resultsHTML += `
+                    <div class="search-result-item" data-book="${result.bookNum}" data-chapter="${result.chapterNum}" data-verse="${result.verseNum}">
+                        <div class="search-result-reference">${result.bookName} ${result.chapterNum}:${result.verseNum}</div>
+                        <div class="search-result-text">${result.verseText}</div>
+                    </div>
+                `;
+            });
+            
+            searchResults.innerHTML = resultsHTML;
+            
+            // Add click handlers to search results
+            document.querySelectorAll('.search-result-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const book = this.dataset.book;
+                    const chapter = this.dataset.chapter;
+                    const verse = this.dataset.verse;
+                    
+                    // Navigate to the verse
+                    if (currentBook !== book || currentChapter !== chapter) {
+                        currentBook = book;
+                        currentChapter = chapter;
+                        loadChapterContent();
+                    }
+                    
+                    // Scroll to the verse after content loads
+                    setTimeout(() => {
+                        const verseElement = document.querySelector(`.verse[data-verse-key="${book}-${chapter}-${verse}"]`);
+                        if (verseElement) {
+                            verseElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            verseElement.classList.add('selected');
+                            selectedVerse = verseElement;
+                        }
+                    }, 100);
+                    
+                    // Close search modal
+                    searchModal.classList.remove('active');
+                });
+            });
         }
         
         // Load highlights list
@@ -864,6 +1198,7 @@
                 
                 highlightItem.innerHTML = `
                     <div class="highlight-reference">${bookName} ${highlight.chapter}:${highlight.verse}</div>
+                    ${highlight.heading ? `<div class="highlight-title">${highlight.heading}</div>` : ''}
                     ${highlight.title ? `<div class="highlight-title">${highlight.title}</div>` : ''}
                     <div class="highlight-content">${getVerseText(verseKey)}</div>
                     ${highlight.note ? `<div class="highlight-note">${highlight.note}</div>` : ''}
@@ -913,8 +1248,8 @@
             }, 100);
         }
         
-        // Navigation handlers
-        prevChapterBtn.addEventListener('click', function() {
+        // Navigation functions
+        function navigateToPreviousChapter() {
             if (!currentBook || !currentChapter) return;
             
             const currentChapterNum = parseInt(currentChapter);
@@ -922,9 +1257,9 @@
                 currentChapter = (currentChapterNum - 1).toString();
                 loadChapterContent();
             }
-        });
+        }
         
-        nextChapterBtn.addEventListener('click', function() {
+        function navigateToNextChapter() {
             if (!currentBook || !currentChapter) return;
             
             const selectedBook = books.find(b => b.number === currentBook);
@@ -934,7 +1269,7 @@
                 currentChapter = (currentChapterNum + 1).toString();
                 loadChapterContent();
             }
-        });
+        }
         
         // Title click handler
         titleContainer.addEventListener('click', function() {
@@ -1002,6 +1337,40 @@
             annotationModal.classList.remove('active');
         });
         
+        // Heading select handlers
+        addHeadingBtn.addEventListener('click', function() {
+            newHeadingModal.classList.add('active');
+            newHeadingInput.focus();
+        });
+        
+        saveNewHeadingBtn.addEventListener('click', addNewHeading);
+        cancelNewHeadingBtn.addEventListener('click', function() {
+            newHeadingModal.classList.remove('active');
+            newHeadingInput.value = '';
+        });
+        
+        newHeadingInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addNewHeading();
+            }
+        });
+        
+        // Search modal handlers
+        searchBtn.addEventListener('click', function() {
+            searchModal.classList.add('active');
+            searchInput.focus();
+        });
+        
+        closeSearchBtn.addEventListener('click', function() {
+            searchModal.classList.remove('active');
+        });
+        
+        searchInput.addEventListener('keyup', function(e) {
+            if (e.key === 'Enter' || searchInput.value.length > 2) {
+                searchBible(searchInput.value);
+            }
+        });
+        
         // Highlights modal handlers
         favoritesBtn.addEventListener('click', function() {
             loadHighlightsList();
@@ -1028,8 +1397,32 @@
             highlightsModal.classList.add('active');
         });
         
+        // Swipe navigation handlers
+        contentElement.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        }, false);
+        
+        contentElement.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, false);
+        
+        function handleSwipe() {
+            const difference = touchStartX - touchEndX;
+            
+            if (Math.abs(difference) > SWIPE_THRESHOLD) {
+                if (difference > 0) {
+                    // Swipe left - next chapter
+                    navigateToNextChapter();
+                } else {
+                    // Swipe right - previous chapter
+                    navigateToPreviousChapter();
+                }
+            }
+        }
+        
         // Initialize
         loadBibleXML();
     </script>
 </body>
-</html>
+                </html>
